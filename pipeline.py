@@ -9,7 +9,11 @@ def get_access_token():
         "client_secret": os.environ["ZOHO_CLIENT_SECRET"],
         "refresh_token": os.environ["ZOHO_REFRESH_TOKEN"],
     })
-    return r.json()["access_token"]
+    data = r.json()
+    print("Zoho response:", data)
+    if "access_token" not in data:
+        raise Exception(f"Error Zoho: {data}")
+    return data["access_token"]
 
 def get_all_deals(token):
     records, page = [], 1
