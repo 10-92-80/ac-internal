@@ -1,0 +1,36 @@
+name: Actualizar Pipeline
+
+on:
+  schedule:
+    - cron: '0 7 * * 1-5'   # Lunes a viernes a las 8h Madrid
+    - cron: '0 12 * * 1-5'  # Lunes a viernes a las 13h Madrid
+    - cron: '0 17 * * 1-5'  # Lunes a viernes a las 18h Madrid
+  workflow_dispatch:          # Permite ejecutarlo manualmente desde GitHub
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: pip install requests
+
+      - name: Generar pipeline
+        env:
+          ZOHO_CLIENT_ID:     ${{ secrets.ZOHO_CLIENT_ID }}
+          ZOHO_CLIENT_SECRET: ${{ secrets.ZOHO_CLIENT_SECRET }}
+          ZOHO_REFRESH_TOKEN: ${{ secrets.ZOHO_REFRESH_TOKEN }}
+        run: python pipeline.py
+
+      - name: Publicar en GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
