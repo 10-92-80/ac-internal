@@ -81,11 +81,19 @@ def get_all_agro(token):
 # Fases que NO cuentan como "candidato activo" de un deal (cerradas,
 # descartadas, en stand-by, etc). Un deal puede tener 10 registros de
 # candidatos y si todos están en estas fases, se trata como "sin candidatos".
+# NOTA: Deals y Agro usan a veces textos ligeramente distintos para el mismo
+# estado (mayúsculas, acentos, o una palabra distinta). Como este set se
+# comparte entre los dos módulos, aquí se incluyen TODAS las variantes que
+# existen en cualquiera de los dos, aunque una variante concreta no exista
+# en el otro módulo (no hace daño tener de más, pero sí lo hace tener de menos).
 EXCLUDED_STAGES = {
-    "Recámara","Stand by","Descartada/Perdida","Descartada en Ciego","Closed Lost","Closed Lost to Competition",
-    "Nunca se presentó","Análisis pero descartado por Albero","Analisis, pero descartado por Albero",
+    "Recámara","Recáma",                                          # Deals dice "Recámara", Agro dice "Recáma"
+    "Stand by","Stand By",                                        # Deals dice "Stand by", Agro dice "Stand By"
+    "Descartada/Perdida","Descartada en Ciego","Closed Lost","Closed Lost to Competition",
+    "Nunca se presentó",
+    "Análisis pero descartado por Albero","Analisis, pero descartado por Albero","Análisis, pero descartada por Albero",  # 3 variantes vistas entre Deals y Agro
     "No Interesante","Vendido a otro / Potencial comprador","Cerrada y facturada",
-    "Cerrada y cobrada","Cerrada y no facturada","-"
+    "Cerrada y cobrada","Cerrada y no facturada","Comprado con un tercero","-"
 }
 
 # En Zoho, cada "deal" real (ej: "Proyecto Hiria") se representa con VARIOS
